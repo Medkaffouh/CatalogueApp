@@ -16,6 +16,26 @@ namespace CatalogueApp.Controllers{
             return catalogueRepository.products.Include(p=>p.Category);
         }
 
+        [HttpGet("paginate")]
+        public IEnumerable<Product> page(int page=0,int size=2){
+            int skipValue=(page-1)*size;
+            return 
+            catalogueRepository
+                .products
+                .Include(p=>p.Category)
+                .Skip(skipValue)
+                .Take(size);
+        }
+
+        [HttpGet("search")]
+        public IEnumerable<Product> search(string kw){
+            return 
+            catalogueRepository
+                .products
+                .Include(p=>p.Category)
+                .Where(p=>p.Name.Contains(kw));
+        }
+
         [HttpGet("{Id}")]
         public Product getProduct(int Id){
             return catalogueRepository.products.Include(p=>p.Category).FirstOrDefault(c=>c.ProductID==Id);
