@@ -1,5 +1,6 @@
 using CatalogueApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogueApp.Controllers{
     [Route("/api/categories")]
@@ -18,6 +19,12 @@ namespace CatalogueApp.Controllers{
         [HttpGet("{Id}")]
         public Category getCat(int Id){
             return catalogueRepository.categories.FirstOrDefault(c=>c.CategoryID==Id);
+        }
+
+        [HttpGet("{Id}/products")]
+        public IEnumerable<Product> products(int Id){
+            Category category = catalogueRepository.categories.Include(c=>c.Products).FirstOrDefault(c=>c.CategoryID==Id);
+            return category.Products;
         }
 
         [HttpPost]
